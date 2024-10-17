@@ -14,6 +14,10 @@ import { useCallback } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BsGithub, BsGoogle } from 'react-icons/bs';
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
+
+
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
@@ -34,6 +38,8 @@ type LoginForm = z.infer<typeof schema>;
 const Login = () => {
   const navigate = useNavigate();
   const { setIsAuth } = useAuthContext();
+
+  const[ showPassword , setShowPassword] = useState(false)
 
   const {
     register,
@@ -149,6 +155,12 @@ const Login = () => {
     [navigate]
   );
 
+  const handleShowPassword = ()=>{
+
+    setShowPassword((prev) => !prev)
+
+  }
+
   return (
     <>
       <div className='flex flex-col w-full items-center justify-center pt-4 pb-6 mx-auto'>
@@ -174,17 +186,23 @@ const Login = () => {
                 <span className={`${errors.email ? 'error-msg' : ''}`}>
                   {errors.email ? errors.email.message : <>&nbsp;</>}
                 </span>
-                <Input
-                  {...register('password')}
-                  id='password'
-                  type='password'
-                  label='Password'
-                  placeholder='••••••••'
-                  disabled={isSubmitting}
-                />
+                <div className='relative'>
+                  <Input
+                    {...register('password')}
+                    id='password'
+                    type={showPassword? 'text' : 'password'}
+                    label='Password'
+                    placeholder='••••••••'
+                    disabled={isSubmitting}
+                  />
+                  <span className="absolute right-3 top-[60%]  flex items-center cursor-pointer text-xl" onClick={handleShowPassword}>
+                    {showPassword ? <FaEyeSlash /> :<FaEye/>}
+                  </span>
+                </div>
                 <span className={`${errors.password ? 'error-msg' : ''}`}>
                   {errors.password ? errors.password.message : <>&nbsp;</>}
                 </span>
+                
               </div>
 
               <div className='space-y-2'>
